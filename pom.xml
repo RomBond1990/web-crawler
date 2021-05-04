@@ -22,7 +22,7 @@
     <description>web-crawler</description>
 
     <properties>
-        <java.version>16</java.version>
+        <java.version>14</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.puppycrawl.version>8.31</checkstyle.puppycrawl.version>
         <main.basedir>${project.basedir}</main.basedir>
