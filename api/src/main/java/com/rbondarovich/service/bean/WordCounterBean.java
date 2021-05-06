@@ -12,4 +12,5 @@ public class WordCounterBean {
     private Long id;
     private String word;
     private Integer count;
+    private LinkBean link;
 }

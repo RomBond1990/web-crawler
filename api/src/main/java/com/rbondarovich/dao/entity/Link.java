@@ -20,5 +20,5 @@ public class Link {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_parent_link_id")
-    private Long parentLink;
+    private Link parentLink;
 }

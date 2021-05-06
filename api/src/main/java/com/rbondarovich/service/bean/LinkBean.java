@@ -11,5 +11,5 @@ public class LinkBean {
 
     private Long id;
     private String link;
-
+    private LinkBean parentLink;
 }

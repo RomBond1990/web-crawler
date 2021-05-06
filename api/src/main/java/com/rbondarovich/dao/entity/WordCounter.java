@@ -20,4 +20,8 @@ public class WordCounter {
 
     @Column(nullable = false, columnDefinition = "int default 0")
     private Integer count;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "fk_link_id")
+    private Link link;
 }
