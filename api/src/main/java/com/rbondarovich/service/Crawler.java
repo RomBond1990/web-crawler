@@ -1,7 +1,9 @@
 package com.rbondarovich.service;
 
 import com.rbondarovich.service.bean.LinkBean;
+import com.rbondarovich.service.impl.CrawlerServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,8 +11,10 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +27,7 @@ public class Crawler {
 
     private static LinkBean createConstantLinkBean() {
         LinkBean constantLinkBean = new LinkBean();
-        constantLinkBean.setLink("NEXT_LEVEL_DEPTH");
+        constantLinkBean.setName("NEXT_LEVEL_DEPTH");
 
         return constantLinkBean;
     }
@@ -51,27 +55,42 @@ public class Crawler {
                 links.offer(NEXT_LEVEL_DEPTH);
                 continue;
             }
-            findAllLinks(linkBean, links);
             crawlerService.saveLink(linkBean);
-            String text = getTextFromPage(linkBean.getLink());
+            LinkBean parentLink = crawlerService.getParentLink(linkBean);
+            findAllLinks(parentLink, links);
+
+            String text = getTextFromPage(linkBean.getName());
             for (String term : terms) {
                 int count = getNumberOfMatches(text, term);
-                crawlerService.saveTerm(crawlerService.createWordCounterBean(term, count, linkBean));
+                crawlerService.saveTerm(crawlerService.createWordCounterBean(term, count, parentLink));
             }
             currentPage++;
         }
     }
 
     private Queue<LinkBean> findAllLinks(LinkBean link, Queue<LinkBean> links) throws IOException {
-        Document doc = Jsoup.connect(link.getLink()).get();
-        Elements elements = doc.select("a");
-        for (Element element : elements) {
-            String url = element.absUrl("href");
-            if (!url.contains("#")) {
-                LinkBean childLink = crawlerService.createLinkBean(url, link);
-                links.add(childLink);
+        Set<LinkBean> setLinks = new LinkedHashSet<>();
+//        Document doc = Jsoup.connect(link.getName()).get();
+        Connection con = Jsoup.connect(link.getName())
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)" +
+                        "Chrome/89.0.4389.128 Safari/537.36 OPR/75.0.3969.243")
+                .timeout(10000);
+        Connection.Response resp = con.execute();
+        Document doc;
+        if (resp.statusCode() == 200) {
+            doc = con.get();
+            Elements elements = doc.select("a");
+            for (Element element : elements) {
+                String url = element.absUrl("href");
+                if (!url.contains("#") && !url.isEmpty()) {
+                    LinkBean childLink = crawlerService.createLinkBean(url, link);
+                    setLinks.add(childLink);
+                }
             }
         }
+
+
+        links.addAll(setLinks);
         return links;
     }
 

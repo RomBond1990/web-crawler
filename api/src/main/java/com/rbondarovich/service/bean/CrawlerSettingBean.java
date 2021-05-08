@@ -7,10 +7,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LinkBean {
+public class CrawlerSettingBean {
 
-    private Long id;
-    private String name;
-    private LinkBean parentLink;
-    private String seed;
+    private String link;
+
+    private String[] terms;
+
+    private Integer depth;
+
+    private Integer maxPages;
+
 }

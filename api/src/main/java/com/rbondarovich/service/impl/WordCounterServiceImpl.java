@@ -28,6 +28,14 @@ public class WordCounterServiceImpl implements WordCounterService {
     }
 
     @Override
+    public List<WordCounterBean> getWordCountersByLink(String link) {
+        List<WordCounter> wordCounters = wordCounterRepository.findByLink_Name(link);
+        List<WordCounterBean> wordCounterBeans = converter.convertToBeanList(wordCounters, WordCounterBean.class);
+
+        return wordCounterBeans;
+    }
+
+    @Override
     public WordCounterBean getWordCounterById(Long id) {
         WordCounter wordCounter = wordCounterRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("WordCounter not exist with id: " + id));
@@ -35,6 +43,8 @@ public class WordCounterServiceImpl implements WordCounterService {
 
         return wordCounterBean;
     }
+
+
 
     @Override
     public void saveWordCounter(WordCounterBean wordCounterBean) {

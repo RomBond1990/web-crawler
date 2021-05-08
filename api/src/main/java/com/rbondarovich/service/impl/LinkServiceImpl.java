@@ -20,9 +20,16 @@ public class LinkServiceImpl implements LinkService {
     private final LinkRepository linkRepository;
 
     @Override
-    public Iterable<LinkBean> getAllLinks() {
-        List<Link> links = linkRepository.findAll();
+    public List<LinkBean> getAllLinks(String seedLink) {
+        List<Link> links = linkRepository.findBySeed(seedLink);
         List<LinkBean> linkBeans = converter.convertToBeanList(links, LinkBean.class);
+
+        return linkBeans;
+    }
+
+    public List<LinkBean> getTopLinks(String seedLink, Integer topLimit) {
+        List<Link> topLinks = linkRepository.findTopByTotalMatches(topLimit, seedLink);
+        List<LinkBean> linkBeans = converter.convertToBeanList(topLinks, LinkBean.class);
 
         return linkBeans;
     }
@@ -31,6 +38,15 @@ public class LinkServiceImpl implements LinkService {
     public LinkBean getLinkById(Long id) {
         Link link = linkRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Link not exist with id: " + id));
+        LinkBean linkBean = converter.convertToBean(link, LinkBean.class);
+
+        return linkBean;
+    }
+
+    @Override
+    public LinkBean getLinkByName(String name){
+        Link link = linkRepository.findByName(name)
+                .orElseThrow(() -> new ResourceNotFoundException("Link not exist with name: " + name));
         LinkBean linkBean = converter.convertToBean(link, LinkBean.class);
 
         return linkBean;

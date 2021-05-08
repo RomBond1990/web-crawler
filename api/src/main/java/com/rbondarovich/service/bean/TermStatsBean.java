@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LinkBean {
+public class TermStatsBean {
 
-    private Long id;
-    private String name;
-    private LinkBean parentLink;
-    private String seed;
+    private String link;
+    private List<WordCounterBean> statsTerms;
+    private Integer totalMatches;
 }

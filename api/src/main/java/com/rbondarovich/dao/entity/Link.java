@@ -15,10 +15,12 @@ public class Link {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String link;
+    @Column(nullable = false, length = 1000)
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_parent_link_id")
+    @JoinColumn(name = "fk_parent_link_id", referencedColumnName = "id")
     private Link parentLink;
+
+    private String seed;
 }

@@ -15,10 +15,17 @@ public class CrawlerServiceImpl implements CrawlerService {
     private final LinkService linkService;
     private final WordCounterService wordCounterService;
 
+
+    public LinkBean getParentLink(LinkBean parentLink) {
+        LinkBean link = linkService.getLinkByName(parentLink.getName());
+
+        return link;
+    }
+
     @Override
     public LinkBean createLinkBean(String link, LinkBean parentLink){
         LinkBean linkBean = new LinkBean();
-        linkBean.setLink(link);
+        linkBean.setName(link);
         linkBean.setParentLink(parentLink);
 
         return linkBean;
