@@ -23,10 +23,11 @@ public class CrawlerServiceImpl implements CrawlerService {
     }
 
     @Override
-    public LinkBean createLinkBean(String link, LinkBean parentLink){
+    public LinkBean createLinkBean(String link, LinkBean parentLink, String seed){
         LinkBean linkBean = new LinkBean();
         linkBean.setName(link);
         linkBean.setParentLink(parentLink);
+        linkBean.setSeed(seed);
 
         return linkBean;
     }
@@ -50,4 +51,5 @@ public class CrawlerServiceImpl implements CrawlerService {
     public void saveTerm(WordCounterBean wordCounter) {
         wordCounterService.saveWordCounter(wordCounter);
     }
+
 }

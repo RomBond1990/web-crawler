@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TermStatsBean {
 
+    private Long id;
     private String link;
     private List<WordCounterBean> statsTerms;
     private Integer totalMatches;

@@ -2,9 +2,7 @@ package com.rbondarovich.web.api;
 
 import com.rbondarovich.service.Crawler;
 import com.rbondarovich.service.bean.CrawlerSettingBean;
-import com.rbondarovich.service.bean.LinkBean;
 import com.rbondarovich.service.bean.TermStatsBean;
-import com.rbondarovich.service.bean.WordCounterBean;
 import com.rbondarovich.service.interfaces.TermStatsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,7 +29,7 @@ public class CrawlerController {
     }
 
     @GetMapping("/{seedLinks}/{limit}")
-    public ResponseEntity<List<TermStatsBean>> getTermsStatsForAllLinks(
+    public ResponseEntity<List<TermStatsBean>> getTermsStatsForTopLinks(
             @PathVariable("seedLinks") String seedLink,
             @PathVariable("limit") Integer limit) {
         List<TermStatsBean> termsStatsForTopLinks = termStatsService.getTermsStatsForTopLinks(seedLink, limit);

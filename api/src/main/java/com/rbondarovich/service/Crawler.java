@@ -11,10 +11,7 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,15 +34,16 @@ public class Crawler {
     }
 
     public void searchMatches(String link, String[] terms, int depth) throws IOException {
-       searchMatches(link, terms, depth, 10000);
+        searchMatches(link, terms, depth, 10000);
     }
 
     public void searchMatches(String link, String[] terms, int depth, int maxPages) throws IOException {
-        LinkBean seed = crawlerService.createLinkBean(link, null);
+        String seed = convertLink(link);
+        LinkBean seedLink = crawlerService.createLinkBean(link, null, seed);
         int currentDepth = 0;
         int currentPage = 0;
         Queue<LinkBean> links = new LinkedList<>();
-        links.offer(seed);
+        links.offer(seedLink);
         links.offer(NEXT_LEVEL_DEPTH);
 
         while (!links.isEmpty() || currentDepth < depth || currentPage < maxPages) {
@@ -57,7 +55,7 @@ public class Crawler {
             }
             crawlerService.saveLink(linkBean);
             LinkBean parentLink = crawlerService.getParentLink(linkBean);
-            findAllLinks(parentLink, links);
+            findAllLinks(parentLink, links, seed);
 
             String text = getTextFromPage(linkBean.getName());
             for (String term : terms) {
@@ -68,7 +66,7 @@ public class Crawler {
         }
     }
 
-    private Queue<LinkBean> findAllLinks(LinkBean link, Queue<LinkBean> links) throws IOException {
+    private Queue<LinkBean> findAllLinks(LinkBean link, Queue<LinkBean> links, String seed) throws IOException {
         Set<LinkBean> setLinks = new LinkedHashSet<>();
 //        Document doc = Jsoup.connect(link.getName()).get();
         Connection con = Jsoup.connect(link.getName())
@@ -83,13 +81,11 @@ public class Crawler {
             for (Element element : elements) {
                 String url = element.absUrl("href");
                 if (!url.contains("#") && !url.isEmpty()) {
-                    LinkBean childLink = crawlerService.createLinkBean(url, link);
+                    LinkBean childLink = crawlerService.createLinkBean(url, link, seed);
                     setLinks.add(childLink);
                 }
             }
         }
-
-
         links.addAll(setLinks);
         return links;
     }
@@ -99,7 +95,9 @@ public class Crawler {
 
         Document document = Jsoup.connect(link).get();
         Element body = document.body();
-        text = body.text();
+        if (body != null) {
+            text = body.text();
+        }
 
         return text;
     }
@@ -114,5 +112,9 @@ public class Crawler {
         }
 
         return count;
+    }
+
+    private String convertLink(String link) {
+        return link.replaceAll("\\W", "");
     }
 }

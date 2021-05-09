@@ -2,6 +2,7 @@ package com.rbondarovich.service.impl;
 
 import com.rbondarovich.dao.entity.WordCounter;
 import com.rbondarovich.dao.repository.WordCounterRepository;
+import com.rbondarovich.service.bean.LinkBean;
 import com.rbondarovich.service.bean.WordCounterBean;
 import com.rbondarovich.service.interfaces.WordCounterService;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,9 @@ public class WordCounterServiceImpl implements WordCounterService {
     }
 
     @Override
-    public List<WordCounterBean> getWordCountersByLink(String link) {
-        List<WordCounter> wordCounters = wordCounterRepository.findByLink_Name(link);
+    public List<WordCounterBean> getWordCountersByLink(LinkBean link) {
+        List<WordCounter> wordCounters = wordCounterRepository.findByLink_Id(link.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Link not exist with id: " + link.getId()));
         List<WordCounterBean> wordCounterBeans = converter.convertToBeanList(wordCounters, WordCounterBean.class);
 
         return wordCounterBeans;

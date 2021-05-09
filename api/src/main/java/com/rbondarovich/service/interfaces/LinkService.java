@@ -8,8 +8,6 @@ public interface LinkService {
 
     List<LinkBean> getAllLinks(String seedLink);
 
-    List<LinkBean> getTopLinks(String seedLink, Integer topLimit);
-
     LinkBean getLinkById(Long id);
 
     LinkBean getLinkByName(String name);
