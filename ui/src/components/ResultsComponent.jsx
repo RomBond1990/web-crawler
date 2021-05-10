@@ -7,14 +7,15 @@ class ResultsComponent extends Component {
 
         this.state = {
             id: this.props.match.params.id,
+            seedLink: this.props.match.params.seedLink,
             termsStats: []
         }
 
     }
 
     componentDidMount() {
-        CrawlerService.getTermsStatsForAllLinks().then((res) => {
-            this.setState({ termStats: res.data});
+        CrawlerService.getTermsStatsForTopLinks(this.state.seedLink, this.state.id).then((res) => {
+            this.setState({ termsStats: res.data});
         });
     }
 
@@ -28,10 +29,7 @@ class ResultsComponent extends Component {
                         <thead>
                         <tr>
                             <th>URL</th>
-                            {this.state.termsStats.wordCounterBean.map(
-                                wordCounter =>
-                                    <th>{wordCounter.word}</th>
-                            )}
+                            {this.state.termsStats[0]}
                             <th>Total</th>
                         </tr>
                         </thead>
@@ -43,9 +41,9 @@ class ResultsComponent extends Component {
                                 termStats =>
                                     <tr>
                                         <td>{termStats.link}</td>
-                                        {termStats.wordCounterBean.map(
-                                            wordCounter =>
-                                                <th>{wordCounter.count}</th>
+                                        {termStats.wordCounterBeans.map(
+                                            wordCounterBean =>
+                                                <th>{wordCounterBean.count}</th>
                                         )}
                                         <td>{termStats.total}</td>
                                         <td>

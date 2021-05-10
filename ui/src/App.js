@@ -12,7 +12,7 @@ function App() {
           <div className="container">
             <Switch>
               {/*<Route path = "/" exact component = {ResultsComponent}/>*/}
-              <Route path = "/api/crawlers/:id" component = {ResultsComponent}/>
+              <Route path = "/api/crawlers/:seedLink/:id" component = {ResultsComponent}/>
             </Switch>
           </div>
           <FooterComponent/>
