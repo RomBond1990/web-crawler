@@ -51,6 +51,7 @@ public class TermStatsServiceImpl implements TermStatsService {
         return topLimitLinks;
     }
 
+    @Override
     public InputStreamResource getCSVResource(List<TermStatsBean> stats) {
         String[] tableHead = getTableHead(stats.get(0));
         List<List<String>> tableBody = getTableBody(stats);

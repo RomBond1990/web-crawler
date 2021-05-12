@@ -24,13 +24,22 @@ public class CrawlerController {
     private final TermStatsService termStatsService;
 
 //    @GetMapping("/{seedLinks}")
-//    public ResponseEntity<List<TermStatsBean>> getTermsStatsForAllLinks(
-//            @PathVariable("seedLinks") String seedLink) throws IOException {
+//    public ResponseEntity<List<TermStatsBean>> getAllTermsStats(
+//            @PathVariable("seedLinks") String seedLink) {
 //
 //        List<TermStatsBean> termsStatsForAllLinks = termStatsService.getTermsStatsForAllLinks(seedLink);
-//        ResponseEntity<List<TermStatsBean>> result = new ResponseEntity<>(termsStatsForAllLinks, HttpStatus.OK);
 //
-//        return result;
+//        return new ResponseEntity<>(termsStatsForAllLinks, HttpStatus.OK);
+//    }
+//
+//    @GetMapping(value = "/{seedLinks}/{limit}")
+//    public ResponseEntity<List<TermStatsBean>> getTopNumberTermsStats(
+//            @PathVariable("seedLinks") String seedLink,
+//            @PathVariable("limit") Integer limit) {
+//
+//        List<TermStatsBean> termsStatsForTopLinks = termStatsService.getTermsStatsForTopLinks(seedLink, limit);
+//
+//        return new ResponseEntity<>(termsStatsForTopLinks, HttpStatus.OK);
 //    }
 
     @GetMapping(value = "/{seedLinks}", produces = "text/csv")

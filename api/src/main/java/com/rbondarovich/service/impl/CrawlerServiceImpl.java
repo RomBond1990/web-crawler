@@ -20,8 +20,6 @@ public class CrawlerServiceImpl implements CrawlerService {
         return linkService.getLinkByName(parentLink.getName());
     }
 
-
-
     @Override
     public LinkBean createLinkBean(String link, Integer linkDepth, LinkBean parentLink, String seed) {
         LinkBean linkBean = new LinkBean();
