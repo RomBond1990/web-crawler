@@ -23,27 +23,24 @@ public class LinkServiceImpl implements LinkService {
     public List<LinkBean> getAllLinks(String seedLink) {
         List<Link> links = linkRepository.findBySeed(seedLink)
                 .orElseThrow(() -> new ResourceNotFoundException("Link doesn't exist with seedLink: " + seedLink));
-        List<LinkBean> linkBeans = converter.convertToBeanList(links, LinkBean.class);
 
-        return linkBeans;
+        return converter.convertToBeanList(links, LinkBean.class);
     }
 
     @Override
     public LinkBean getLinkById(Long id) {
         Link link = linkRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Link doesn't exist with id: " + id));
-        LinkBean linkBean = converter.convertToBean(link, LinkBean.class);
 
-        return linkBean;
+        return converter.convertToBean(link, LinkBean.class);
     }
 
     @Override
     public LinkBean getLinkByName(String name) {
         Link link = linkRepository.findByName(name)
                 .orElseThrow(() -> new ResourceNotFoundException("Link doesn't exist with name: " + name));
-        LinkBean linkBean = converter.convertToBean(link, LinkBean.class);
 
-        return linkBean;
+        return converter.convertToBean(link, LinkBean.class);
     }
 
     @Override
@@ -56,4 +53,5 @@ public class LinkServiceImpl implements LinkService {
     public void deleteLink(Long id) {
         linkRepository.deleteById(id);
     }
+
 }

@@ -18,9 +18,12 @@ public class Link {
     @Column(nullable = false, length = 1000)
     private String name;
 
+    private Integer linkDepth;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_parent_link_id", referencedColumnName = "id")
     private Link parentLink;
 
     private String seed;
+
 }

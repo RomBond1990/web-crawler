@@ -16,16 +16,17 @@ public class CrawlerServiceImpl implements CrawlerService {
     private final WordCounterService wordCounterService;
 
 
-    public LinkBean getParentLink(LinkBean parentLink) {
-        LinkBean link = linkService.getLinkByName(parentLink.getName());
-
-        return link;
+    public LinkBean getStoredLink(LinkBean parentLink) {
+        return linkService.getLinkByName(parentLink.getName());
     }
 
+
+
     @Override
-    public LinkBean createLinkBean(String link, LinkBean parentLink, String seed){
+    public LinkBean createLinkBean(String link, Integer linkDepth, LinkBean parentLink, String seed) {
         LinkBean linkBean = new LinkBean();
         linkBean.setName(link);
+        linkBean.setLinkDepth(linkDepth);
         linkBean.setParentLink(parentLink);
         linkBean.setSeed(seed);
 
@@ -33,7 +34,7 @@ public class CrawlerServiceImpl implements CrawlerService {
     }
 
     @Override
-    public WordCounterBean createWordCounterBean(String term, int count, LinkBean link){
+    public WordCounterBean createWordCounterBean(String term, int count, LinkBean link) {
         WordCounterBean wordCounterBean = new WordCounterBean();
         wordCounterBean.setWord(term);
         wordCounterBean.setCount(count);

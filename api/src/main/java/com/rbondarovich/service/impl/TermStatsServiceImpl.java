@@ -7,10 +7,20 @@ import com.rbondarovich.service.interfaces.LinkService;
 import com.rbondarovich.service.interfaces.TermStatsService;
 import com.rbondarovich.service.interfaces.WordCounterService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -32,7 +42,7 @@ public class TermStatsServiceImpl implements TermStatsService {
     @Override
     public List<TermStatsBean> getTermsStatsForTopLinks(String seedLink, Integer topLimit) {
         List<TermStatsBean> termsStats = getTermsStatsForAllLinks(seedLink);
-        Collections.sort(termsStats, Comparator.comparingInt(TermStatsBean::getTotalMatches));
+        termsStats.sort(Comparator.comparingInt(TermStatsBean::getTotalMatches).reversed());
         List<TermStatsBean> topLimitLinks = new ArrayList<>();
         for (int i = 0; i < topLimit; i++) {
             topLimitLinks.add(termsStats.get(i));
@@ -41,16 +51,69 @@ public class TermStatsServiceImpl implements TermStatsService {
         return topLimitLinks;
     }
 
-    private List<WordCounterBean> getStatsTerms(LinkBean link) {
-        List<WordCounterBean> statsTerms = wordCounterService.getWordCountersByLink(link);
+    public InputStreamResource getCSVResource(List<TermStatsBean> stats) {
+        String[] tableHead = getTableHead(stats.get(0));
+        List<List<String>> tableBody = getTableBody(stats);
 
-        return statsTerms;
+        ByteArrayInputStream byteArrayOutputStream;
+        try (
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                CSVPrinter csvPrinter = new CSVPrinter(
+                        new PrintWriter(out),
+                        CSVFormat.DEFAULT.withHeader(tableHead)
+                )
+        ) {
+            for (List<String> row : tableBody) {
+                csvPrinter.printRecord(row);
+            }
+            csvPrinter.flush();
+            byteArrayOutputStream = new ByteArrayInputStream(out.toByteArray());
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return new InputStreamResource(byteArrayOutputStream);
+    }
+
+    private String[] getTableHead(TermStatsBean bean) {
+        List<String> headList = new ArrayList<>();
+        headList.add("URL");
+
+        for (WordCounterBean wcbean : bean.getWordCounterBeans()) {
+
+            headList.add(wcbean.getWord());
+        }
+        headList.add("total");
+
+        return headList.toArray(new String[0]);
+    }
+
+    private List<List<String>> getTableBody(List<TermStatsBean> stats) {
+        List<List<String>> tableBody = new ArrayList<>();
+
+        for (TermStatsBean bean : stats) {
+            List<String> row = new ArrayList<>();
+            row.add(bean.getLink());
+            for (WordCounterBean wcBean : bean.getWordCounterBeans()) {
+                row.add(wcBean.getCount().toString());
+            }
+            row.add(bean.getTotalMatches().toString());
+            tableBody.add(row);
+
+        }
+
+        return tableBody;
+    }
+
+    private List<WordCounterBean> getStatsTerms(LinkBean link) {
+
+        return wordCounterService.getWordCountersByLink(link);
     }
 
     private Integer calculateTotalMatches(Iterable<WordCounterBean> statsTerms) {
         int totalMatches = 0;
         for (WordCounterBean statTerm : statsTerms) {
-            totalMatches = statTerm.getCount();
+            totalMatches += statTerm.getCount();
         }
 
         return totalMatches;
@@ -61,7 +124,7 @@ public class TermStatsServiceImpl implements TermStatsService {
         termStatsBean.setLink(link.getName());
         termStatsBean.setId(link.getId());
         List<WordCounterBean> statsTerms = getStatsTerms(link);
-        termStatsBean.setStatsTerms(statsTerms);
+        termStatsBean.setWordCounterBeans(statsTerms);
         termStatsBean.setTotalMatches(calculateTotalMatches(statsTerms));
 
         return termStatsBean;

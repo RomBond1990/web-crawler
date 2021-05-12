@@ -13,6 +13,6 @@ public class TermStatsBean {
 
     private Long id;
     private String link;
-    private List<WordCounterBean> statsTerms;
+    private List<WordCounterBean> wordCounterBeans;
     private Integer totalMatches;
 }

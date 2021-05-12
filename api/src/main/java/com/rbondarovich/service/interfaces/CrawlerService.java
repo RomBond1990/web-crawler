@@ -11,5 +11,5 @@ public interface CrawlerService {
 
     WordCounterBean createWordCounterBean(String term, int count, LinkBean link);
 
-    LinkBean createLinkBean(String link, LinkBean parentLink, String seed);
+    LinkBean createLinkBean(String link, Integer linkDepth, LinkBean parentLink, String seed);
 }
