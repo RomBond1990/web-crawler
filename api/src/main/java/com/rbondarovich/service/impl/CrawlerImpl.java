@@ -1,6 +1,7 @@
 package com.rbondarovich.service.impl;
 
 import com.rbondarovich.service.bean.LinkBean;
+import com.rbondarovich.service.exception.IncorrectInputData;
 import com.rbondarovich.service.interfaces.Crawler;
 import com.rbondarovich.service.interfaces.LinkService;
 import lombok.RequiredArgsConstructor;
@@ -77,7 +78,10 @@ public class CrawlerImpl implements Crawler {
      * @param maxPages maximum number of scanned pages
      */
     @Override
-    public void searchMatches(String link, String[] terms, int limitDepth, int maxPages) {
+    public void searchMatches(String link, String[] terms, int limitDepth, int maxPages) throws IncorrectInputData{
+        if(!crawlerService.validateURL(link)) {
+            throw new IncorrectInputData("URL is bad");
+        }
         String seed = convertLink(link);
         int currentDepth = 0;
         int currentPage;

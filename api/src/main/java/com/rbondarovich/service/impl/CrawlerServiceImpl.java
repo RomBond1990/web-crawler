@@ -1,15 +1,19 @@
 package com.rbondarovich.service.impl;
 
+import com.rbondarovich.service.bean.CrawlerSettingBean;
 import com.rbondarovich.service.bean.LinkBean;
 import com.rbondarovich.service.bean.WordCounterBean;
+import com.rbondarovich.service.exception.IncorrectInputData;
 import com.rbondarovich.service.interfaces.CrawlerService;
 import com.rbondarovich.service.interfaces.LinkService;
 import com.rbondarovich.service.interfaces.WordCounterService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.stereotype.Service;
 
 /**
  * Used to create LinkBean and WordCounterBean, save and get data
+ *
  * @author Roman Bondarovich
  */
 @Service
@@ -21,6 +25,7 @@ public class CrawlerServiceImpl implements CrawlerService {
 
     /**
      * Gets LinkBean by @param parentLink
+     *
      * @param parentLink the page from which the jump was made
      * @return LinkBean
      */
@@ -30,10 +35,11 @@ public class CrawlerServiceImpl implements CrawlerService {
 
     /**
      * Create LinkBean from data
-     * @param link scanned page
-     * @param linkDepth number of jumps from the home page
+     *
+     * @param link       scanned page
+     * @param linkDepth  number of jumps from the home page
      * @param parentLink the page from which the jump was made
-     * @param seed link consisting only of letters and numbers
+     * @param seed       link consisting only of letters and numbers
      * @return LinkBean
      */
     @Override
@@ -49,9 +55,10 @@ public class CrawlerServiceImpl implements CrawlerService {
 
     /**
      * Create WordCounterBean from data
-     * @param term search word
+     *
+     * @param term  search word
      * @param count number of matches
-     * @param link the page where the search took place
+     * @param link  the page where the search took place
      * @return WordCounterBean
      */
     @Override
@@ -66,6 +73,7 @@ public class CrawlerServiceImpl implements CrawlerService {
 
     /**
      * Used @see LinkServiceImpl#saveLink(LinkBean linkBean)
+     *
      * @param linkBean
      */
     @Override
@@ -75,11 +83,20 @@ public class CrawlerServiceImpl implements CrawlerService {
 
     /**
      * Used @see WordCounterServiceImpl#saveWordCounter(WordCounterBean wordCounterBean)
+     *
      * @param wordCounter
      */
     @Override
     public void saveTerm(WordCounterBean wordCounter) {
         wordCounterService.saveWordCounter(wordCounter);
+    }
+
+
+    public boolean validateURL(String link) {
+        String[] schemes = {"http", "https"}; // DEFAULT schemes = "http", "https", "ftp"
+        UrlValidator urlValidator = new UrlValidator(schemes);
+
+        return urlValidator.isValid(link);
     }
 
 }

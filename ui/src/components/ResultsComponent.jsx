@@ -9,13 +9,13 @@ class ResultsComponent extends Component {
 
         this.state = {
             seedLink: this.props.match.params.seedLink,
-            id: this.props.match.params.id
+            id: this.props.match.params.id,
         }
 
         this.generateAllLinks = this.generateAllLinks.bind(this);
         this.generateTopLinks = this.generateTopLinks.bind(this);
     }
-
+    
     generateAllLinks = (event) => {
         event.preventDefault();
         CrawlerService.getTermsStatsForAllLinks(this.state.seedLink).then(res => {
@@ -30,37 +30,43 @@ class ResultsComponent extends Component {
         })
     }
 
-    render() {
-        return (
-            <div>
-                <div className="content">
-                        <div className="row" style={{marginTop: 20}}>
-                            <div className="col-sm-1"></div>
-                            <div className="col-sm-5">
-                                <div className="card">
-                                    <div className="card-header text-center">Get CSV</div>
-                                    <div className="card-body">
-                                        <div className="row">
-                                            <button className="btn btn-success"
-                                                    onClick={this.generateAllLinks}>All Data
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className="card-body">
-                                        <div className="row">
-                                            <button className="btn btn-success" onClick={this.generateTopLinks}>Top 10
-                                                Links
-                                            </button>
-                                        </div>
-                                    </div>
+    drawPage() {
+        if (this.props.location.state.message !== undefined) {
+            return <h3 className="text-center">{this.props.location.state.message}</h3>
+        }else
+            return (
+            <div className="content">
+                <div className="row" style={{marginTop: 20}}>
+                    <div className="col-sm-1"></div>
+                    <div className="col-sm-5">
+                        <div className="card">
+                            <div className="card-header text-center">Get CSV</div>
+                            <div className="card-body">
+                                <div className="row">
+                                    <button className="btn btn-success"
+                                            onClick={this.generateAllLinks}>All Data
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="card-body">
+                                <div className="row">
+                                    <button className="btn btn-success" onClick={this.generateTopLinks}>Top 10
+                                        Links
+                                    </button>
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </div>
-
             </div>
+        )
+    }
 
-
+    render() {
+        return (
+            <div>
+                {this.drawPage()}
+            </div>
         );
     }
 }

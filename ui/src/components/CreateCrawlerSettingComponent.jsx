@@ -50,9 +50,14 @@ class CreateCrawlerSettingComponent extends Component {
         };
         let seed = crawlerSetting.link;
         seed = seed.replace(/[^a-zа-яё0-9\s]/gi, '');
-        console.log(seed);
+
         CrawlerService.createCrawlerSettings(crawlerSetting).then(res => {
-            this.props.history.push('/api/crawlers' + '/' + seed + "/" + "10");
+            let exceptionMessage = "";
+            if (typeof res.data.message !== undefined) exceptionMessage = res.data.message;
+            this.props.history.push({
+                pathname: '/api/crawlers' + '/' + seed + "/" + "10",
+                state:{ message: exceptionMessage}
+            });
         })
     }
 
