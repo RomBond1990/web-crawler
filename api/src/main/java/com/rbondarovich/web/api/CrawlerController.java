@@ -12,9 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
+/**
+ * Endpoint for web application
+ */
 @RestController
 @RequestMapping(value = "api/crawlers")
 @RequiredArgsConstructor
@@ -23,47 +25,42 @@ public class CrawlerController {
     private final Crawler crawler;
     private final TermStatsService termStatsService;
 
-//    @GetMapping("/{seedLinks}")
-//    public ResponseEntity<List<TermStatsBean>> getAllTermsStats(
-//            @PathVariable("seedLinks") String seedLink) {
-//
-//        List<TermStatsBean> termsStatsForAllLinks = termStatsService.getTermsStatsForAllLinks(seedLink);
-//
-//        return new ResponseEntity<>(termsStatsForAllLinks, HttpStatus.OK);
-//    }
-//
-//    @GetMapping(value = "/{seedLinks}/{limit}")
-//    public ResponseEntity<List<TermStatsBean>> getTopNumberTermsStats(
-//            @PathVariable("seedLinks") String seedLink,
-//            @PathVariable("limit") Integer limit) {
-//
-//        List<TermStatsBean> termsStatsForTopLinks = termStatsService.getTermsStatsForTopLinks(seedLink, limit);
-//
-//        return new ResponseEntity<>(termsStatsForTopLinks, HttpStatus.OK);
-//    }
-
+    /**
+     * Returns all data in the СSV format
+     * @param seedLink root link consisting only of words and numbers
+     * @return
+     */
     @GetMapping(value = "/{seedLinks}", produces = "text/csv")
     public ResponseEntity<Resource> getTermsStatsForAllLinks(
-            @PathVariable("seedLinks") String seedLink) throws IOException {
+            @PathVariable("seedLinks") String seedLink) {
 
         List<TermStatsBean> termsStatsForAllLinks = termStatsService.getTermsStatsForAllLinks(seedLink);
-
-        return createCSVResponce(termsStatsForAllLinks);
+        return createCSVResponse(termsStatsForAllLinks);
     }
 
+    /**
+     * Returns the top (@param topLimit) of data by total matches in the СSV format
+     * @param seedLink root link consisting only of words and numbers
+     * @param limit number of records to select
+     * @return ResponseEntity<Resource>
+     */
     @GetMapping(value = "/{seedLinks}/{limit}", produces = "text/csv")
     public ResponseEntity<Resource> getTermsStatsForTopLinks(
             @PathVariable("seedLinks") String seedLink,
             @PathVariable("limit") Integer limit) {
 
         List<TermStatsBean> termsStatsForTopLinks = termStatsService.getTermsStatsForTopLinks(seedLink, limit);
-
-        return createCSVResponce(termsStatsForTopLinks);
+        return createCSVResponse(termsStatsForTopLinks);
     }
 
+    /**
+     * Transmits the search criteria to the crawler
+     * @param setting search criteria
+     * @return ResponseEntity<CrawlerSettingBean>
+     */
     @PostMapping
     public ResponseEntity<CrawlerSettingBean> searchMatches(
-            @RequestBody CrawlerSettingBean setting) throws IOException {
+            @RequestBody CrawlerSettingBean setting) {
 
         if (setting.getDepth() != null && setting.getMaxPages() != null) {
             crawler.searchMatches(setting.getLink(), setting.getTerms(), setting.getDepth(), setting.getMaxPages());
@@ -77,7 +74,7 @@ public class CrawlerController {
     }
 
 
-    private ResponseEntity<Resource> createCSVResponce(List<TermStatsBean> termStats) {
+    private ResponseEntity<Resource> createCSVResponse(List<TermStatsBean> termStats) {
         InputStreamResource csvResource = termStatsService.getCSVResource(termStats);
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=stats.csv");

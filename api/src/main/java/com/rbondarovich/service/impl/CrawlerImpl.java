@@ -18,28 +18,64 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Scans the Internet according to specified criteria.
+ * To create LinkBean and WordCounterBean, save and get uses @see CrawlerServiceImpl
+ * @author Roman Bondarovich
+ */
 @Service
 @RequiredArgsConstructor
 public class CrawlerImpl implements Crawler {
 
+    /**
+     * Used to create LinkBean and WordCounterBean, save and get data
+     */
     private final CrawlerServiceImpl crawlerService;
-    private final LinkService linkService;
 
+    /**
+     * Does @see searchMatches(String link, String[] terms, int limitDepth, int maxPages) if limitDepth and maxPages is not set.
+     * The limitDepth = 8 and the maxPages = 10 000.
+     * @param link search home page
+     * @param terms search depth
+     */
     @Override
     public void searchMatches(String link, String[] terms) {
         searchMatches(link, terms, 8);
     }
 
+    /**
+     * Does @see searchMatches(String link, String[] terms, int limitDepth, int maxPages) if limitDepth is not set.
+     * The limitDepth = 8.
+     * @param link search home page
+     * @param maxPages words to find
+     * @param terms search depth
+     */
     @Override
     public void searchMatches(String link, int maxPages, String[] terms) {
         searchMatches(link, terms, 8, maxPages);
     }
 
+    /**
+     * Does @see searchMatches(String link, String[] terms, int limitDepth, int maxPages) if maxPages is not set.
+     * The maxPages = 10 000.
+     * @param link search home page
+     * @param terms words to find
+     * @param limitDepth search depth
+     */
     @Override
-    public void searchMatches(String link, String[] terms, int depth) {
-        searchMatches(link, terms, depth, 10000);
+    public void searchMatches(String link, String[] terms, int limitDepth) {
+        searchMatches(link, terms, limitDepth, 10000);
     }
 
+    /**
+     * Searches for words and counts the number of matches on the page.
+     * Starts scanning from the link page, visits the links on the page in depth @param limitDepth.
+     * The search is performed in width. The maximum number of pages scanned is determined by @param maxPages
+     * @param link scanned page
+     * @param terms words to find
+     * @param limitDepth search depth
+     * @param maxPages maximum number of scanned pages
+     */
     @Override
     public void searchMatches(String link, String[] terms, int limitDepth, int maxPages) {
         String seed = convertLink(link);

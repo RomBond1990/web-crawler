@@ -22,6 +22,10 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Generates statistics and returns the data as a list of TermStatsBean objects or a resource in csv format
+ * @author Roman Bondarovich
+ */
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -30,6 +34,15 @@ public class TermStatsServiceImpl implements TermStatsService {
     private final WordCounterService wordCounterService;
     private final LinkService linkService;
 
+    /**
+     * Generates a list of TermStatsBean consisting of:
+     * 1. the link
+     * 2. the words searched for on the page
+     * 3. the number of matches for each of words
+     * 4. the total number of matching words on the page
+     * @param seedLink root link consisting only of words and numbers
+     * @return List<TermStatsBean>
+     */
     @Override
     public List<TermStatsBean> getTermsStatsForAllLinks(String seedLink) {
         List<TermStatsBean> termsStats;
@@ -39,6 +52,12 @@ public class TermStatsServiceImpl implements TermStatsService {
         return termsStats;
     }
 
+    /**
+     * Does @see getTermsStatsForAllLinks() and chooses the top @param topLimit by total matches
+     * @param seedLink root link consisting only of words and numbers
+     * @param topLimit number of records to select
+     * @return List<TermStatsBean>
+     */
     @Override
     public List<TermStatsBean> getTermsStatsForTopLinks(String seedLink, Integer topLimit) {
         List<TermStatsBean> termsStats = getTermsStatsForAllLinks(seedLink);
@@ -51,6 +70,11 @@ public class TermStatsServiceImpl implements TermStatsService {
         return topLimitLinks;
     }
 
+    /**
+     * Generates data in csv format and turns it into a resource
+     * @param stats list of TermStatsBeans
+     * @return InputStreamResource
+     */
     @Override
     public InputStreamResource getCSVResource(List<TermStatsBean> stats) {
         String[] tableHead = getTableHead(stats.get(0));
