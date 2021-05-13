@@ -2,8 +2,11 @@ package com.rbondarovich.web.api;
 
 import com.rbondarovich.service.bean.CrawlerSettingBean;
 import com.rbondarovich.service.bean.TermStatsBean;
+import com.rbondarovich.service.exception.IncorrectInputData;
 import com.rbondarovich.service.interfaces.Crawler;
+import com.rbondarovich.service.interfaces.CrawlerService;
 import com.rbondarovich.service.interfaces.TermStatsService;
+import com.rbondarovich.web.validators.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -27,6 +30,7 @@ public class CrawlerController {
 
     /**
      * Returns all data in the СSV format
+     *
      * @param seedLink root link consisting only of words and numbers
      * @return
      */
@@ -40,8 +44,9 @@ public class CrawlerController {
 
     /**
      * Returns the top (@param topLimit) of data by total matches in the СSV format
+     *
      * @param seedLink root link consisting only of words and numbers
-     * @param limit number of records to select
+     * @param limit    number of records to select
      * @return ResponseEntity<Resource>
      */
     @GetMapping(value = "/{seedLinks}/{limit}", produces = "text/csv")
@@ -55,22 +60,33 @@ public class CrawlerController {
 
     /**
      * Transmits the search criteria to the crawler
-     * @param setting search criteria
+     *
+     * @param settings search criteria
      * @return ResponseEntity<CrawlerSettingBean>
      */
     @PostMapping
     public ResponseEntity<CrawlerSettingBean> searchMatches(
-            @RequestBody CrawlerSettingBean setting) {
+            @RequestBody CrawlerSettingBean settings) throws IncorrectInputData {
 
-        if (setting.getDepth() != null && setting.getMaxPages() != null) {
-            crawler.searchMatches(setting.getLink(), setting.getTerms(), setting.getDepth(), setting.getMaxPages());
-        } else if (setting.getDepth() != null && setting.getMaxPages() == null) {
-            crawler.searchMatches(setting.getLink(), setting.getTerms(), setting.getDepth());
-        } else if (setting.getDepth() == null && setting.getMaxPages() != null) {
-            crawler.searchMatches(setting.getLink(), setting.getMaxPages(), setting.getTerms());
-        } else crawler.searchMatches(setting.getLink(), setting.getTerms());
+        if (Validator.validateData(settings)) {
+            if (settings.getDepth() != null && settings.getMaxPages() != null) {
+                crawler.searchMatches(settings.getLink(),
+                        settings.getTerms(),
+                        Integer.parseInt(settings.getDepth()),
+                        Integer.parseInt(settings.getMaxPages()));
+            } else if (settings.getDepth() != null && settings.getMaxPages() == null) {
+                crawler.searchMatches(settings.getLink(),
+                        settings.getTerms(),
+                        Integer.parseInt(settings.getDepth()));
+            } else if (settings.getDepth() == null && settings.getMaxPages() != null) {
+                crawler.searchMatches(settings.getLink(),
+                        Integer.parseInt(settings.getMaxPages()),
+                        settings.getTerms());
+            } else crawler.searchMatches(settings.getLink(), settings.getTerms());
 
-        return new ResponseEntity<>(setting, HttpStatus.OK);
+        } ;
+
+        return new ResponseEntity<>(settings, HttpStatus.OK);
     }
 
 

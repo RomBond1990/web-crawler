@@ -15,7 +15,7 @@ class ResultsComponent extends Component {
         this.generateAllLinks = this.generateAllLinks.bind(this);
         this.generateTopLinks = this.generateTopLinks.bind(this);
     }
-    
+
     generateAllLinks = (event) => {
         event.preventDefault();
         CrawlerService.getTermsStatsForAllLinks(this.state.seedLink).then(res => {

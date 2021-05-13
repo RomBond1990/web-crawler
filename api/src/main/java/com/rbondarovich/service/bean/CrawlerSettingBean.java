@@ -13,8 +13,8 @@ public class CrawlerSettingBean {
 
     private String[] terms;
 
-    private Integer depth;
+    private String depth;
 
-    private Integer maxPages;
+    private String maxPages;
 
 }

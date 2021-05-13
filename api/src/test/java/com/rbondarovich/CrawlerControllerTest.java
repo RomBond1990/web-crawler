@@ -41,23 +41,12 @@ public class CrawlerControllerTest {
     @Autowired
     private TermStatsService termStatsService;
 
-//    public void getTermsStatsForAllLinksTest() throws Exception {
-//
-//        MockMultipartFile file = new MockMultipartFile()
-//        this.mockMvc.perform(
-//                MockMvcRequestBuilders.multipart("/api/crawlers/httpsbananabyindexphpnewsid290844/5")
-//                        .file("file", "http://www.test.com/xml".getBytes())
-//                        .param("name", "file.csv"))
-//                .andExpect(status().isOk())
-//                .andExpect(content().string("{\"message\":\"Your document has queued for enhancement successfully.\",\"exception\":null}"));
-//    }
-
     @Test
     public void searchMatchesTest() throws Exception {
         CrawlerSettingBean setting = new CrawlerSettingBean();
         setting.setLink("https://banana.by/index.php?newsid=290844");
-        setting.setDepth(2);
-        setting.setMaxPages(15);
+        setting.setDepth("2");
+        setting.setMaxPages("15");
         setting.setTerms(new String[]{"пиво", "по религиозным убеждениям"});
 
         String json = new ObjectMapper().writeValueAsString(setting);
@@ -77,7 +66,5 @@ public class CrawlerControllerTest {
         Assert.assertEquals(total, 40);
         Assert.assertEquals(top5TermsStats.get(4).getLink(), "https://banana.by/index.php?do=about");
     }
-
-
 
 }

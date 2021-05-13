@@ -91,12 +91,4 @@ public class CrawlerServiceImpl implements CrawlerService {
         wordCounterService.saveWordCounter(wordCounter);
     }
 
-
-    public boolean validateURL(String link) {
-        String[] schemes = {"http", "https"}; // DEFAULT schemes = "http", "https", "ftp"
-        UrlValidator urlValidator = new UrlValidator(schemes);
-
-        return urlValidator.isValid(link);
-    }
-
 }

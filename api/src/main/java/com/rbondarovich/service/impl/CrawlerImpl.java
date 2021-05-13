@@ -79,9 +79,6 @@ public class CrawlerImpl implements Crawler {
      */
     @Override
     public void searchMatches(String link, String[] terms, int limitDepth, int maxPages) throws IncorrectInputData{
-        if(!crawlerService.validateURL(link)) {
-            throw new IncorrectInputData("URL is bad");
-        }
         String seed = convertLink(link);
         int currentDepth = 0;
         int currentPage;
