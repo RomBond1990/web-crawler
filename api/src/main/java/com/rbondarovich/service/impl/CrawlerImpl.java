@@ -139,7 +139,6 @@ public class CrawlerImpl implements Crawler {
     }
 
     private Document getDocument(LinkBean link) {
-        System.out.println(link);
         Document document = null;
         try {
             Connection con = Jsoup.connect(link.getName())

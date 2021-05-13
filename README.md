@@ -36,6 +36,9 @@ Frontend will be accessible at `http://localhost:3000`
 
 You can build the package as a single artifact by running the (from root)
 ```
+cd ui
+mvn compile
+cd ..
 mvn clean install
 ```
 Next, you can run the application by executing:
