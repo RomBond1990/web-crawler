@@ -50,6 +50,7 @@ java -jar api/target/spring-boot-react-starter-api.jar
 The application will be accessible at `http://localhost:8080`
 
 ## Docker Setup
+#####Does not work yet 
 
 First you have to build a jar in the /api
 
