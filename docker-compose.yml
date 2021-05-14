@@ -1,12 +1,12 @@
 version: "3"
 services:
   ui:
-    image: rb/crawler-ui
+    image: rbondarovich/crawler-ui
     ports:
       - "80:80"
     links:
       - api
   api:
-    image: rb/crawler-api
+    image: rbondarovich/crawler-api
     ports:
       - "8080:8080"

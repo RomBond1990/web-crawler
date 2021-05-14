@@ -34,6 +34,16 @@ Frontend will be accessible at `http://localhost:3000`
 
 ### Running the full application
 
+#### Using Docker
+*for windows:
+
+You can run the application by executing (from root):
+```
+bash docker-pull.sh
+```
+The application will be accessible at `http://localhost`
+
+#### Using Maven
 You can build the package as a single artifact by running the (from root)
 ```
 cd ui
@@ -50,7 +60,6 @@ java -jar api/target/spring-boot-react-starter-api.jar
 The application will be accessible at `http://localhost:8080`
 
 ## Docker Setup
-#####Does not work yet 
 
 First you have to build a jar in the /api
 
