@@ -2,37 +2,12 @@
 
 -----
 
-
-
-
-
 This project provides a productive setup for building Spring Boot React applications. The application is divided into two Maven modules:
 
 1. `api`: This contains Java code of the application.
 2. `ui`: This contains all react JavaScript code of the application.
 
-
-
-### Running the backend for development mode
-
-There are multiple ways to run the backend. For development, you can use your favorite IDE and run the
-`com.rbondarovich.Application`
-
-Backend will be accessible at `http://localhost:8080`
-
-### Running the frontend for development mode
-
-**You will need Node 12+ and npm to run the dev server and build the project**.
-
-From root:
-```
- cd ui
- npm install
- npm start
-```
-Frontend will be accessible at `http://localhost:3000`
-
-### Running the full application
+## Running the full application
 
 #### Using Docker
 *for windows:
@@ -58,6 +33,26 @@ java -jar api/target/spring-boot-react-starter-api.jar
 ```
 
 The application will be accessible at `http://localhost:8080`
+
+
+### Running the backend for development mode
+
+There are multiple ways to run the backend. For development, you can use your favorite IDE and run the
+`com.rbondarovich.Application`
+
+Backend will be accessible at `http://localhost:8080`
+
+### Running the frontend for development mode
+
+**You will need Node 12+ and npm to run the dev server and build the project**.
+
+From root:
+```
+ cd ui
+ npm install
+ npm start
+```
+Frontend will be accessible at `http://localhost:3000`
 
 ## Docker Setup
 
